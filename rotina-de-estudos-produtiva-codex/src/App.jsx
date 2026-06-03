@@ -1056,7 +1056,7 @@ export default function MiniSaaSRotina() {
                   </div>
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                     <p className="text-sm text-slate-500">Execution mode</p>
-                    <p className="mt-2 font-semibold">Study -> application -> measurement -> adjustment</p>
+                    <p className="mt-2 font-semibold">Study -&gt; application -&gt; measurement -&gt; adjustment</p>
                   </div>
                   <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                     <p className="text-sm text-slate-500">Operational decision</p>
