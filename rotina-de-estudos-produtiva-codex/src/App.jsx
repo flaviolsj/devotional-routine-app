@@ -899,7 +899,8 @@ export default function MiniSaaSRotina() {
           <div className="border-t border-slate-800 px-4 py-4">
             <div className="rounded-2xl bg-white/5 p-4">
               <p className="text-xs uppercase tracking-wide text-slate-400">Core rule</p>
-              <p className="mt-2 text-sm text-slate-200">Study -> application -> measurement -> adjustment -> order and progress</p>
+              <p className="mt-2 text-sm text-slate-200">Study -&gt; application -&gt; measurement -&gt; adjustment -&gt; order and progress</p>
+
             </div>
           </div>
         </aside>
