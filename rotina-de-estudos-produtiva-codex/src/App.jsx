@@ -171,14 +171,19 @@ const DEFAULT_THEMES = {
     { day: "Sunday", theme: "Purpose", focus: ["Calling", "Direction", "Weekly alignment"] },
   ],
   pt: [
-    { day: "Monday", theme: "Devocional", focus: ["Leitura bíblica", "Oração", "Foco espiritual"] },
-    { day: "Tuesday", theme: "Sabedoria", focus: ["Provérbios", "Discernimento", "Bom julgamento"] },
-    { day: "Wednesday", theme: "Reflexão", focus: ["Revisão interior", "Silêncio", "Alinhamento pessoal"] },
-    { day: "Thursday", theme: "Aplicação prática", focus: ["Obediência", "Passos de ação", "Implementação diária"] },
-    { day: "Friday", theme: "Disciplina masculina", focus: ["Autocontrole", "Consistência", "Responsabilidade"] },
-    { day: "Saturday", theme: "Liderança", focus: ["Visão", "Serviço", "Tomada de decisão"] },
-    { day: "Sunday", theme: "Propósito", focus: ["Chamado", "Direção", "Alinhamento da semana"] },
+    { day: "Segunda", theme: "Devocional", focus: ["Leitura bíblica", "Oração", "Foco espiritual"] },
+    { day: "Terça", theme: "Sabedoria", focus: ["Provérbios", "Discernimento", "Bom julgamento"] },
+    { day: "Quarta", theme: "Reflexão", focus: ["Revisão interior", "Silêncio", "Alinhamento pessoal"] },
+    { day: "Quinta", theme: "Aplicação prática", focus: ["Obediência", "Passos de ação", "Implementação diária"] },
+    { day: "Sexta", theme: "Disciplina masculina", focus: ["Autocontrole", "Consistência", "Responsabilidade"] },
+    { day: "Sábado", theme: "Liderança", focus: ["Visão", "Serviço", "Tomada de decisão"] },
+    { day: "Domingo", theme: "Propósito", focus: ["Chamado", "Direção", "Alinhamento da semana"] },
   ],
+};
+
+const WEEK_DAY_LABELS = {
+  en: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+  pt: ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"],
 };
 
 const DEFAULT_BLOCKS = {
@@ -255,7 +260,12 @@ function loadState() {
   if (typeof window === "undefined") return null;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    const normalized = { ...parsed };
+    normalized["en.themes"] = normalizeThemeDays(parsed["en.themes"] ?? DEFAULT_THEMES.en, "en");
+    normalized["pt.themes"] = normalizeThemeDays(parsed["pt.themes"] ?? DEFAULT_THEMES.pt, "pt");
+    return normalized;
   } catch {
     return null;
   }
@@ -273,6 +283,14 @@ function clamp(n) {
 function completion(tasks) {
   if (!tasks.length) return 0;
   return Math.round((tasks.filter((t) => t.done).length / tasks.length) * 100);
+}
+
+function normalizeThemeDays(list, language) {
+  const labels = WEEK_DAY_LABELS[language] ?? WEEK_DAY_LABELS.en;
+  return list.map((item, index) => ({
+    ...item,
+    day: labels[index] ?? item.day,
+  }));
 }
 
 function Badge({ children, variant = "default" }) {
@@ -388,7 +406,8 @@ export default function App() {
     window.localStorage.setItem(LANGUAGE_KEY, language);
     setState((prev) => {
       const next = { ...prev };
-      if (!next[`${language}.themes`]) next[`${language}.themes`] = themes;
+      next["en.themes"] = normalizeThemeDays(next["en.themes"] ?? DEFAULT_THEMES.en, "en");
+      next["pt.themes"] = normalizeThemeDays(next["pt.themes"] ?? DEFAULT_THEMES.pt, "pt");
       if (!next[`${language}.blocks`]) next[`${language}.blocks`] = blocks;
       if (!next[`${language}.courses`]) next[`${language}.courses`] = coursesDefaults;
       if (!next[`${language}.tasks`]) next[`${language}.tasks`] = tasksDefaults;
